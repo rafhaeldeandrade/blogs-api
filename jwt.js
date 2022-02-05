@@ -12,7 +12,6 @@ module.exports = ({ email }) => {
   const payload = {
     email,
   };
-
   const token = jwt.sign(payload, JWT_SECRET, jwtConfig);
 
   return token;
