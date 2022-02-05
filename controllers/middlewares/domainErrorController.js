@@ -4,6 +4,7 @@ const domainErrorMap = {
   notFound: 404,
   alreadyRegistered: 409,
   invalidFields: 400,
+  categoryNotFound: 400,
 };
 
 module.exports = (err, _req, res, next) => {
