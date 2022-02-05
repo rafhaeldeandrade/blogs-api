@@ -15,6 +15,25 @@ route.get(
   }),
 );
 
+route.get(
+  '/:id',
+  rescue(auth),
+  rescue(async (req, res) => {
+    const { id } = req.params;
+
+    const user = await userService.findById(id);
+
+    if (!user) {
+      const err = new Error();
+      err.code = 'notFound';
+      err.message = 'User does not exist';
+      throw err;
+    }
+
+    return res.status(200).json(user);
+  }),
+);
+
 route.post(
   '/',
   rescue(async (req, res) => {
