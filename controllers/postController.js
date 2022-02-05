@@ -18,6 +18,23 @@ route.get(
   }),
 );
 
+route.get(
+  '/:id',
+  rescue(auth),
+  rescue(async (req, res) => {
+    const { id } = req.params;
+    const result = await postService.findById({ id });
+
+    if (!result) {
+      const error = new Error('Post does not exist');
+      error.code = 'notFound';
+      throw error;
+    }
+
+    return res.status(200).json(result);
+  }),
+);
+
 route.post(
   '/',
   rescue(auth),
