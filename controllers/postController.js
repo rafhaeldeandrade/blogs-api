@@ -8,6 +8,16 @@ const auth = require('./middlewares/auth');
 const err = new Error('"categoryIds" not found');
 err.code = 'categoryNotFound';
 
+route.get(
+  '/',
+  rescue(auth),
+  rescue(async (_req, res) => {
+    const result = await postService.findAll();
+
+    return res.status(200).json(result);
+  }),
+);
+
 route.post(
   '/',
   rescue(auth),
@@ -24,7 +34,11 @@ route.post(
       }),
     );
 
-    const result = await postService.create({ userId: req.user.id, title, content, categoryIds,
+    const result = await postService.create({
+      userId: req.user.id,
+      title,
+      content,
+      categoryIds,
     });
 
     return res.status(201).json({
