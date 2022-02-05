@@ -3,6 +3,17 @@ const rescue = require('express-rescue');
 const validateRegisterUser = require('../schemas/registerSchema');
 const userService = require('../services/userService');
 const generateJwt = require('../jwt');
+const auth = require('./middlewares/auth');
+
+route.get(
+  '/',
+  rescue(auth),
+  rescue(async (_req, res) => {
+    const result = await userService.findAll();
+
+    return res.status(200).json(result);
+  }),
+);
 
 route.post(
   '/',

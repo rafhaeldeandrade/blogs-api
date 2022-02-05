@@ -7,9 +7,14 @@ const findAll = async () => {
 };
 
 const findByEmail = async ({ email }) => {
-  const result = await User.findOne({ where: { email } });
+  const result = await User.findOne({
+    attributes: { exclude: ['password'] },
+    where: { email },
+  });
 
-  return result;
+  if (!result) return false;
+
+  return result.dataValues;
 };
 
 const findOrCreateUser = async ({ displayName, email, password, image }) => {
