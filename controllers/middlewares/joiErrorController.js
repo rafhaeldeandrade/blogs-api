@@ -1,6 +1,7 @@
 const joi = require('joi');
 
 module.exports = (err, _req, res, next) => {
+  console.log('JoiErrorController: ', err);
   if (!joi.isError(err)) return next(err);
   const joiErrorMap = {
     'string.min': 400,

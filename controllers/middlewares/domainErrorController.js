@@ -7,6 +7,7 @@ const domainErrorMap = {
 };
 
 module.exports = (err, _req, res, next) => {
+  console.log('DomainErrroController: ', err);
   if (err instanceof JsonWebTokenError) {
     return res.status(401).json({ message: 'Expired or invalid token' });
   }
