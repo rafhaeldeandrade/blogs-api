@@ -1,5 +1,19 @@
 const { BlogPost, PostCategory, User, Category } = require('../models');
 
+const update = async ({ title, content, id }) => {
+  await BlogPost.update({ title, content }, { where: { id } });
+
+  const post = await BlogPost.findOne({
+    where: { id },
+    include: [
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+    attributes: { exclude: ['id', 'published', 'updated'] },
+  });
+
+  return post;
+};
+
 const findById = async ({ id }) => {
   const result = await BlogPost.findOne({
     where: { id },
@@ -43,4 +57,4 @@ const create = async ({ userId, title, content, categoryIds }) => {
   return created.dataValues;
 };
 
-module.exports = { create, findAll, findById };
+module.exports = { create, findAll, findById, update };

@@ -1,12 +1,37 @@
 const route = require('express').Router();
 const rescue = require('express-rescue');
 const validatePostSchema = require('../schemas/postSchema.js');
+const validateEditPostSchema = require('../schemas/editPostSchema.js');
 const postService = require('../services/postService');
 const categoryService = require('../services/categoryService');
 const auth = require('./middlewares/auth');
 
 const err = new Error('"categoryIds" not found');
 err.code = 'categoryNotFound';
+
+route.put(
+  '/:id',
+  rescue(auth),
+  rescue(async (req, res) => {
+    const { title, content, categoryIds } = req.body;
+    validateEditPostSchema({ title, content });
+    const { id } = req.params;
+
+    if (categoryIds) {
+      return res.status(400).json({ message: 'Categories cannot be edited' });
+    }
+
+    const user = await postService.findById({ id });
+
+    if (req.user.id !== user.userId) {
+      return res.status(401).json({ message: 'Unauthorized user' });
+    }
+
+    const result = await postService.update({ title, content, id });
+
+    return res.status(200).json(result);
+  }),
+);
 
 route.get(
   '/',
@@ -51,7 +76,11 @@ route.post(
       }),
     );
 
-    const result = await postService.create({ userId: req.user.id, title, content, categoryIds,
+    const result = await postService.create({
+      userId: req.user.id,
+      title,
+      content,
+      categoryIds,
     });
 
     return res.status(201).json({
