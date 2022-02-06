@@ -15,7 +15,6 @@ const findById = async ({ id }) => {
 
 const create = async ({ name }) => {
   const created = await Category.create({ name });
-  console.log(created);
   return created.dataValues;
 };
 

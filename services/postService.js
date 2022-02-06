@@ -69,10 +69,8 @@ const findAll = async ({ searchParams }) => {
 };
 
 const create = async ({ userId, title, content, categoryIds }) => {
-  console.log('created: ');
   const created = await BlogPost.create({ title, content, userId });
   const blogPost = created.dataValues;
-  console.log('postId: ', blogPost.id);
 
   await Promise.all(
     categoryIds.map(async (c) => {

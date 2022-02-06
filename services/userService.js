@@ -2,7 +2,6 @@ const { User } = require('../models');
 
 const remove = async ({ id }) => {
   const result = await User.destroy({ where: { id } });
-  console.log('result Remove(): ', result);
   if (!result) throw new Error();
   return true;
 };
