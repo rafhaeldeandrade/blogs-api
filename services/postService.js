@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { BlogPost, PostCategory, User, Category } = require('../models');
 
 const remove = async ({ id }) => {
@@ -34,7 +35,29 @@ const findById = async ({ id }) => {
   return result;
 };
 
-const findAll = async () => {
+const findAllWithParams = async ({ searchParams }) => {
+  const result = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+    where: {
+      [Op.or]: [{
+          title: {
+            [Op.like]: `%${searchParams}%`,
+          },
+        }, {
+          content: {
+            [Op.like]: `%${searchParams}%`,
+          },
+        }],
+    },
+  });
+  return result;
+};
+
+const findAll = async ({ searchParams }) => {
+  if (searchParams) return findAllWithParams({ searchParams });
   const result = await BlogPost.findAll({
     include: [
       { model: User, as: 'user', attributes: { exclude: ['password'] } },
