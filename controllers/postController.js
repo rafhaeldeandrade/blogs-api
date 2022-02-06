@@ -9,16 +9,6 @@ const auth = require('./middlewares/auth');
 const err = new Error('"categoryIds" not found');
 err.code = 'categoryNotFound';
 
-route.get('/search', rescue(auth), async (req, res) => {
-  const { q } = req.query;
-
-  const result = await postService.findAll({ searchParams: q });
-
-  if (!result || !result.length) return res.status(200).json([]);
-  
-  return res.status(200).json(result);
-});
-
 route.delete(
   '/:id',
   rescue(auth),
@@ -66,11 +56,21 @@ route.get(
   '/',
   rescue(auth),
   rescue(async (_req, res) => {
-    const result = await postService.findAll();
+    const result = await postService.findAll({ searchParams: null });
 
     return res.status(200).json(result);
   }),
 );
+
+route.get('/search', rescue(auth), async (req, res) => {
+  const { q } = req.query;
+
+  const result = await postService.findAll({ searchParams: q });
+
+  if (!result || !result.length) return res.status(200).json([]);
+  
+  return res.status(200).json(result);
+});
 
 route.get(
   '/:id',
