@@ -95,11 +95,7 @@ route.post(
       }),
     );
 
-    const result = await postService.create({
-      userId: req.user.id,
-      title,
-      content,
-      categoryIds,
+    const result = await postService.create({ userId: req.user.id, title, content, categoryIds,
     });
 
     return res.status(201).json({

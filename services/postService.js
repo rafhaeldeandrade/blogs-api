@@ -2,7 +2,6 @@ const { BlogPost, PostCategory, User, Category } = require('../models');
 
 const remove = async ({ id }) => {
   const result = await BlogPost.destroy({ where: { id } });
-  console.log('result Remove(): ', result);
   if (!result) throw new Error();
   return true;
 };

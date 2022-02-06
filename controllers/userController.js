@@ -5,6 +5,16 @@ const userService = require('../services/userService');
 const generateJwt = require('../jwt');
 const auth = require('./middlewares/auth');
 
+route.delete(
+  '/me',
+  rescue(auth),
+  rescue(async (req, res) => {
+    await userService.remove({ id: req.user.id });
+
+    return res.status(204).end();
+  }),
+);
+
 route.get(
   '/',
   rescue(auth),

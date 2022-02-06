@@ -1,5 +1,12 @@
 const { User } = require('../models');
 
+const remove = async ({ id }) => {
+  const result = await User.destroy({ where: { id } });
+  console.log('result Remove(): ', result);
+  if (!result) throw new Error();
+  return true;
+};
+
 const findAll = async () => {
   const result = await User.findAll({
     attributes: { exclude: ['password'] },
@@ -45,4 +52,11 @@ const create = async ({ displayName, email, password, image }) => {
   return true;
 };
 
-module.exports = { findAll, findByEmail, create, findOrCreateUser, findById };
+module.exports = {
+  findAll,
+  findByEmail,
+  create,
+  findOrCreateUser,
+  findById,
+  remove,
+};
