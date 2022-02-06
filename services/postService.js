@@ -1,5 +1,12 @@
 const { BlogPost, PostCategory, User, Category } = require('../models');
 
+const remove = async ({ id }) => {
+  const result = await BlogPost.destroy({ where: { id } });
+  console.log('result Remove(): ', result);
+  if (!result) throw new Error();
+  return true;
+};
+
 const update = async ({ title, content, id }) => {
   await BlogPost.update({ title, content }, { where: { id } });
 
@@ -57,4 +64,4 @@ const create = async ({ userId, title, content, categoryIds }) => {
   return created.dataValues;
 };
 
-module.exports = { create, findAll, findById, update };
+module.exports = { create, findAll, findById, update, remove };

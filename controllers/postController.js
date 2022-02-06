@@ -9,6 +9,25 @@ const auth = require('./middlewares/auth');
 const err = new Error('"categoryIds" not found');
 err.code = 'categoryNotFound';
 
+route.delete(
+  '/:id',
+  rescue(auth),
+  rescue(async (req, res) => {
+    const { id } = req.params;
+    const user = await postService.findById({ id });
+
+    if (!user) return res.status(404).json({ message: 'Post does not exist' });
+
+    if (req.user.id !== user.userId) {
+      return res.status(401).json({ message: 'Unauthorized user' });
+    }
+
+    await postService.remove({ id });
+
+    return res.status(204).end();
+  }),
+);
+
 route.put(
   '/:id',
   rescue(auth),
@@ -76,7 +95,11 @@ route.post(
       }),
     );
 
-    const result = await postService.create({ userId: req.user.id, title, content, categoryIds,
+    const result = await postService.create({
+      userId: req.user.id,
+      title,
+      content,
+      categoryIds,
     });
 
     return res.status(201).json({
